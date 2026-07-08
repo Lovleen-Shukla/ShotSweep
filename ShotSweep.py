@@ -11,11 +11,11 @@ SETUP
    pip install keyboard pillow pywin32
 
 2. Run it:
-   python ShotSweep.py
+   python quick_shot.py
 
 3. (Optional) Make it start automatically with Windows:
    - Win+R -> shell:startup -> create a shortcut to a .bat file containing:
-       pythonw C:\path\to\ShotSweep.py
+       pythonw C:\path\to\quick_shot.py
      (pythonw avoids a console window popping up)
 
 USAGE
@@ -47,7 +47,7 @@ from winerror import ERROR_ALREADY_EXISTS
 
 # ---------------- CONFIG ----------------
 EXPIRY_MINUTES = 7 * 24 * 60   # 7 days
-SAVE_DIR = os.path.join(os.path.expanduser("~"), "Pictures", "ShotSweep")
+SAVE_DIR = os.path.join(os.path.expanduser("~"), "Pictures", "QuickShots")
 CLEANUP_CHECK_INTERVAL_SECONDS = 60 * 60   # 1 hour
 # -----------------------------------------
 
@@ -172,7 +172,7 @@ def main():
     # Prevent multiple copies from running at once. If setup.bat, the
     # Startup shortcut, or the user launches this more than once, extra
     # copies will conflict over the same hotkeys and silently misbehave.
-    mutex = win32event.CreateMutex(None, False, "ShotSweep_SingleInstance_Mutex")
+    mutex = win32event.CreateMutex(None, False, "QuickShot_SingleInstance_Mutex")
     if win32api.GetLastError() == ERROR_ALREADY_EXISTS:
         print("[ShotSweep] Already running — not starting a second copy.")
         return

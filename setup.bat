@@ -2,7 +2,7 @@
 setlocal
 
 echo ============================================
-echo   Quick Shot Setup
+echo   ShotSweep Setup
 echo ============================================
 echo.
 
@@ -25,14 +25,14 @@ if errorlevel 1 (
 )
 
 echo [2/3] Enabling auto-start when Windows logs in...
-copy /Y "%~dp0start_quick_shot.vbs" "%APPDATA%\Microsoft\Windows\Start Menu\Programs\Startup\start_quick_shot.vbs" >nul
+copy /Y "%~dp0start_shotsweep.vbs" "%APPDATA%\Microsoft\Windows\Start Menu\Programs\Startup\start_shotsweep.vbs" >nul
 
-echo [3/3] Starting Quick Shot now...
-wscript "%~dp0start_quick_shot.vbs"
+echo [3/3] Starting ShotSweep now...
+wscript "%~dp0start_shotsweep.vbs"
 
 echo.
 echo ============================================
-echo   Done! Quick Shot is running in the background.
+echo   Done! ShotSweep is running in the background.
 echo.
 echo   Ctrl+Shift+S   full screen shot (expires)
 echo   Ctrl+Shift+K   full screen shot (keeper)

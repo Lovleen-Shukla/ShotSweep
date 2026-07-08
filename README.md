@@ -40,7 +40,7 @@ That's it. `setup.bat` will:
 - Launch ShotSweep immediately in the background
 - Register it to auto-start every time you log into Windows
 
-Screenshots are saved to `Pictures\ShotSweep` in your user folder.
+Screenshots are saved to `Pictures\QuickShots` in your user folder.
 
 ### Manual install (alternative)
 ```
@@ -54,7 +54,7 @@ Open `ShotSweep.py` and edit the values near the top of the file:
 
 ```python
 EXPIRY_MINUTES = 7 * 24 * 60   # how long until an expiring screenshot is deleted
-SAVE_DIR = os.path.join(os.path.expanduser("~"), "Pictures", "ShotSweep")
+SAVE_DIR = os.path.join(os.path.expanduser("~"), "Pictures", "QuickShots")
 CLEANUP_CHECK_INTERVAL_SECONDS = 60 * 60   # how often the cleanup check runs
 ```
 
@@ -69,14 +69,14 @@ Lower `EXPIRY_MINUTES` and `CLEANUP_CHECK_INTERVAL_SECONDS` if you want to test 
 
 ## Uninstalling
 
-1. Delete the shortcut/file from your Startup folder: press `Win+R`, type `shell:startup`, and remove `start_quick_shot.vbs`.
+1. Delete the shortcut/file from your Startup folder: press `Win+R`, type `shell:startup`, and remove `start_shotsweep.vbs`.
 2. End the `pythonw.exe` process in Task Manager if it's currently running, or press `Ctrl+Shift+Q` while it's focused... it has no window, so Task Manager is the reliable way to stop it if you didn't use the quit hotkey.
 3. Delete the project folder.
 
 ## Notes
 
 - Requires the `keyboard` library's global hook, which occasionally needs to be run as Administrator to register hotkeys reliably, especially if other elevated apps are running.
-- This is a personal utility project — contributions and forks welcome, but it comes with no warranty. Double check `Pictures\ShotSweep` occasionally until you trust the expiry settings you've configured.
+- This is a personal utility project — contributions and forks welcome, but it comes with no warranty. Double check `Pictures\QuickShots` occasionally until you trust the expiry settings you've configured.
 
 ## License
 
