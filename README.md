@@ -1,6 +1,6 @@
 # ShotSweep
 
-A lightweight Windows tool for people who take a *lot* of screenshots just to share something once, then never clean them up. Quick Shot lets you take a screenshot with a hotkey and automatically deletes it after a set number of days — unless you explicitly mark it as a keeper.
+A lightweight Windows tool for people who take a *lot* of screenshots just to share something once, then never clean them up. ShotSweep lets you take a screenshot with a hotkey and automatically deletes it after a set number of days — unless you explicitly mark it as a keeper.
 
 No more folders full of screenshots you don't remember taking.
 
@@ -37,24 +37,24 @@ No more folders full of screenshots you don't remember taking.
 
 That's it. `setup.bat` will:
 - Install the required Python packages (`keyboard`, `pillow`, `pywin32`)
-- Launch Quick Shot immediately in the background
+- Launch ShotSweep immediately in the background
 - Register it to auto-start every time you log into Windows
 
-Screenshots are saved to `Pictures\QuickShots` in your user folder.
+Screenshots are saved to `Pictures\ShotSweep` in your user folder.
 
 ### Manual install (alternative)
 ```
 pip install -r requirements.txt
-python quick_shot.py
+python ShotSweep.py
 ```
 
 ## Configuration
 
-Open `quick_shot.py` and edit the values near the top of the file:
+Open `ShotSweep.py` and edit the values near the top of the file:
 
 ```python
 EXPIRY_MINUTES = 7 * 24 * 60   # how long until an expiring screenshot is deleted
-SAVE_DIR = os.path.join(os.path.expanduser("~"), "Pictures", "QuickShots")
+SAVE_DIR = os.path.join(os.path.expanduser("~"), "Pictures", "ShotSweep")
 CLEANUP_CHECK_INTERVAL_SECONDS = 60 * 60   # how often the cleanup check runs
 ```
 
@@ -76,7 +76,7 @@ Lower `EXPIRY_MINUTES` and `CLEANUP_CHECK_INTERVAL_SECONDS` if you want to test 
 ## Notes
 
 - Requires the `keyboard` library's global hook, which occasionally needs to be run as Administrator to register hotkeys reliably, especially if other elevated apps are running.
-- This is a personal utility project — contributions and forks welcome, but it comes with no warranty. Double check `Pictures\QuickShots` occasionally until you trust the expiry settings you've configured.
+- This is a personal utility project — contributions and forks welcome, but it comes with no warranty. Double check `Pictures\ShotSweep` occasionally until you trust the expiry settings you've configured.
 
 ## License
 

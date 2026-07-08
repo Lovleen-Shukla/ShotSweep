@@ -1,5 +1,5 @@
 r"""
-Quick Shot - auto-expiring screenshot tool for Windows.
+ShotSweep- auto-expiring screenshot tool for Windows.
 
 Press a hotkey to take a screenshot. It's saved with an expiry date baked
 into the filename and copied to your clipboard for instant pasting/sharing.
@@ -11,11 +11,11 @@ SETUP
    pip install keyboard pillow pywin32
 
 2. Run it:
-   python quick_shot.py
+   python ShotSweep.py
 
 3. (Optional) Make it start automatically with Windows:
    - Win+R -> shell:startup -> create a shortcut to a .bat file containing:
-       pythonw C:\path\to\quick_shot.py
+       pythonw C:\path\to\ShotSweep.py
      (pythonw avoids a console window popping up)
 
 USAGE
