@@ -1,5 +1,5 @@
 r"""
-ShotSweep- auto-expiring screenshot tool for Windows.
+ShotSweep - auto-expiring screenshot tool for Windows.
 
 Press a hotkey to take a screenshot. It's saved with an expiry date baked
 into the filename and copied to your clipboard for instant pasting/sharing.
@@ -41,10 +41,13 @@ import keyboard
 import tkinter as tk
 from PIL import ImageGrab
 import win32clipboard
+import win32event
+import win32api
+from winerror import ERROR_ALREADY_EXISTS
 
 # ---------------- CONFIG ----------------
 EXPIRY_MINUTES = 7 * 24 * 60   # 7 days
-SAVE_DIR = os.path.join(os.path.expanduser("~"), "Pictures", "QuickShots")
+SAVE_DIR = os.path.join(os.path.expanduser("~"), "Pictures", "ShotSweep")
 CLEANUP_CHECK_INTERVAL_SECONDS = 60 * 60   # 1 hour
 # -----------------------------------------
 
@@ -126,7 +129,7 @@ def take_screenshot(expiry_minutes=None, area=False):
     if area:
         box = select_area()
         if box is None:
-            print("[Quick Shot] Selection cancelled.")
+            print("[ShotSweep] Selection cancelled.")
             return
         img = ImageGrab.grab(bbox=box)
     else:
@@ -142,7 +145,7 @@ def take_screenshot(expiry_minutes=None, area=False):
     img.save(path, "PNG")
     copy_image_to_clipboard(img)
     label = "keeper (never expires)" if expiry_minutes is None else f"expires {expiry_str}"
-    print(f"[Quick Shot] Saved {filename} ({label}) — copied to clipboard.")
+    print(f"[ShotSweep] Saved {filename} ({label}) — copied to clipboard.")
 
 
 def cleanup_loop():
@@ -159,18 +162,26 @@ def cleanup_loop():
             if now >= expiry_dt:
                 try:
                     os.remove(os.path.join(SAVE_DIR, fname))
-                    print(f"[Quick Shot] Deleted expired screenshot: {fname}")
+                    print(f"[ShotSweep] Deleted expired screenshot: {fname}")
                 except OSError as e:
-                    print(f"[Quick Shot] Couldn't delete {fname}: {e}")
+                    print(f"[ShotSweep] Couldn't delete {fname}: {e}")
         time.sleep(CLEANUP_CHECK_INTERVAL_SECONDS)
 
 
 def main():
-    print(f"[Quick Shot] Watching folder: {SAVE_DIR}")
-    print(f"[Quick Shot] Default expiry: {EXPIRY_MINUTES} minutes")
-    print("[Quick Shot] Ctrl+Shift+S = full screen (expires) | Ctrl+Shift+K = full screen (keeper)")
-    print("[Quick Shot] Ctrl+Shift+A = select area (expires) | Ctrl+Shift+D = select area (keeper)")
-    print("[Quick Shot] Ctrl+Shift+Q = quit")
+    # Prevent multiple copies from running at once. If setup.bat, the
+    # Startup shortcut, or the user launches this more than once, extra
+    # copies will conflict over the same hotkeys and silently misbehave.
+    mutex = win32event.CreateMutex(None, False, "ShotSweep_SingleInstance_Mutex")
+    if win32api.GetLastError() == ERROR_ALREADY_EXISTS:
+        print("[ShotSweep] Already running — not starting a second copy.")
+        return
+
+    print(f"[ShotSweep] Watching folder: {SAVE_DIR}")
+    print(f"[ShotSweep] Default expiry: {EXPIRY_MINUTES} minutes")
+    print("[ShotSweep] Ctrl+Shift+S = full screen (expires) | Ctrl+Shift+K = full screen (keeper)")
+    print("[ShotSweep] Ctrl+Shift+A = select area (expires) | Ctrl+Shift+D = select area (keeper)")
+    print("[ShotSweep] Ctrl+Shift+Q = quit")
 
     threading.Thread(target=cleanup_loop, daemon=True).start()
 
@@ -191,7 +202,7 @@ def main():
     while True:
         request = action_queue.get()  # blocks until a hotkey is pressed
         if request == "quit":
-            print("[Quick Shot] Quitting.")
+            print("[ShotSweep] Quitting.")
             os._exit(0)
         expiry_minutes, area = request
         take_screenshot(expiry_minutes, area=area)
