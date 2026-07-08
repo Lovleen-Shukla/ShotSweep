@@ -34,6 +34,7 @@ import os
 import re
 import time
 import queue
+import ctypes
 import threading
 from datetime import datetime, timedelta
 
@@ -44,6 +45,18 @@ import win32clipboard
 import win32event
 import win32api
 from winerror import ERROR_ALREADY_EXISTS
+
+# Make this process DPI-aware. Without this, on a scaled display (125%,
+# 150%, etc.) tkinter reports mouse coordinates in "logical" pixels while
+# ImageGrab captures in real screen pixels, so the area you drag-select
+# doesn't match what actually gets captured. This fixes that mismatch.
+try:
+    ctypes.windll.shcore.SetProcessDpiAwareness(2)  # PROCESS_PER_MONITOR_DPI_AWARE
+except Exception:
+    try:
+        ctypes.windll.user32.SetProcessDPIAware()
+    except Exception:
+        pass
 
 # ---------------- CONFIG ----------------
 EXPIRY_MINUTES = 7 * 24 * 60   # 7 days
