@@ -118,9 +118,16 @@ def select_area():
         x1, y1 = event.x, event.y
         if x0 is not None and (abs(x1 - x0) > 5 and abs(y1 - y0) > 5):
             result["box"] = (min(x0, x1), min(y0, y1), max(x0, x1), max(y0, y1))
-        root.destroy()
+        _release_and_close()
 
     def on_escape(event):
+        _release_and_close()
+
+    def _release_and_close():
+        try:
+            root.grab_release()
+        except tk.TclError:
+            pass
         root.destroy()
 
     canvas.bind("<ButtonPress-1>", on_press)
@@ -133,6 +140,15 @@ def select_area():
     root.lift()
     root.focus_force()
     canvas.focus_set()
+
+    # Windows blocks background processes (like a global hotkey handler)
+    # from stealing keyboard focus outright, which is why Esc needed a
+    # click first. A global grab bypasses that by forcing ALL keyboard and
+    # mouse input in the system to this window until it's released below.
+    try:
+        root.grab_set_global()
+    except tk.TclError:
+        pass
 
     root.mainloop()
     return result.get("box")
@@ -221,5 +237,17 @@ def main():
         take_screenshot(expiry_minutes, area=area)
 
 
+LOG_FILE = os.path.join(os.path.expanduser("~"), "ShotSweep_log.txt")
+
+
 if __name__ == "__main__":
-    main()
+    try:
+        main()
+    except Exception:
+        # pythonw has no console, so an uncaught error here would otherwise
+        # vanish silently. Write it to a log file instead so it can be
+        # diagnosed after the fact (e.g. after a startup failure).
+        import traceback
+        with open(LOG_FILE, "a") as f:
+            f.write(f"\n--- Crash at {datetime.now()} ---\n")
+            traceback.print_exc(file=f)

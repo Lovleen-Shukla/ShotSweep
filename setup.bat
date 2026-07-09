@@ -25,7 +25,11 @@ if errorlevel 1 (
 )
 
 echo [2/3] Enabling auto-start when Windows logs in...
-copy /Y "%~dp0start_shotsweep.vbs" "%APPDATA%\Microsoft\Windows\Start Menu\Programs\Startup\start_shotsweep.vbs" >nul
+set "STARTUP_VBS=%APPDATA%\Microsoft\Windows\Start Menu\Programs\Startup\start_shotsweep.vbs"
+(
+echo Set objShell = CreateObject("WScript.Shell"^)
+echo objShell.Run "pythonw ""%~dp0ShotSweep.py""", 0, False
+) > "%STARTUP_VBS%"
 
 echo [3/3] Starting ShotSweep now...
 wscript "%~dp0start_shotsweep.vbs"
